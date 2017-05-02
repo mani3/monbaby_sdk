@@ -120,3 +120,26 @@ if (sensorValArray.getAcceleration() > 0.8
     }
 }
 
+------------
+Average activity
+------------
+
+------------
+Sleeping time
+------------
+
+------------
+Awake time
+------------
+
+------------
+Fall detection
+------------
+
+------------
+Prone time
+------------
+
+------------
+Battery alert
+------------
