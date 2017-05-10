@@ -96,7 +96,8 @@ Here is the logic for calculating the rollover angle
         return mbAngle;
     }
 
-Here is the logic for calculation if baby is on the back, I've added comments and the code snippet below
+Here is the logic for calculation if baby is on the back, I've added comments and the code snippet below:
+
     // if acceleration is in a steady state (more than 0.8g and less than 1.2g)
     if (sensorValArray.getAcceleration() > 0.8
             && sensorValArray.getAcceleration() < 1.2) {
@@ -123,18 +124,57 @@ Here is the logic for calculation if baby is on the back, I've added comments an
 ------------
 Average activity
 ------------
+Average activity is a detrended squared sum of accelerometer measurements. Detrending is done by subtracting averaged over analysis timeperiod (20 seconds) value of squared sum of accelerometer measurements.
+
+        ANALYSIS_TIMEPERIOD = 20.0f;
+        for (int ii = 1; ii < windowsize; ii++) {
+            //take most recent within 20 seconds interval values
+            if (buft_ptr[ii] >= System.currentTimeMillis() / 1000. - ANALYSIS_TIMEPERIOD) {
+                mean_disp += Math.sqrt(bufx_ptr[ii] * bufx_ptr[ii] + bufy_ptr[ii] * bufy_ptr[ii] + bufz_ptr[ii]
+                    * bufz_ptr[ii]);
+                wcnt++;
+        }
+        if (wcnt > 0) mean_disp /= wcnt;
+        for (int ii = 1; ii < windowsize; ii++) {
+            if (buft_ptr[ii] < System.currentTimeMillis() / 1000. - ANALYSIS_TIMEPERIOD) {
+                double d1 = Math.abs(Math.sqrt(bufx_ptr[ii] * bufx_ptr[ii] + bufy_ptr[ii] * bufy_ptr[ii]
+                    + bufz_ptr[ii] * bufz_ptr[ii])
+                    - mean_disp);
+            }
+            activityLevel += d1;
+        }
 
 ------------
 Sleeping time
 ------------
+TBD
 
 ------------
 Awake time
 ------------
+TBD
 
 ------------
 Fall detection
 ------------
+Fall is detected by finding within 5 second time period, falling time-period followed by a hit
+
+		for (ii = 1; ii < windowsize; ii++) {
+            // calculate detrended squared sum
+			sig[ii] = Math.sqrt(vx[ii] * vx[ii] + vy[ii] * vy[ii] + vz[ii] * vz[ii]) - meanVal;
+            // first detect falling time period
+			if (sig[ii] < (-0.7) && jneg == 0) {
+				neg[jneg++] = ii;
+			}
+			// followed by a hit
+			if (sig[ii] > 0.2 && jpos == 0) {
+				pos[jpos++] = ii;
+			}
+			if (jneg > 0 && jpos > 0 && (neg[jpos - 1] - pos[jneg - 1]) > 0) {
+	        	isFoundFlag = 1;
+	        	return isFoundFlag;
+			}
+        }
 
 ------------
 Prone time
@@ -143,3 +183,10 @@ Prone time
 ------------
 Battery alert
 ------------
+We have 2 services for battery level, one service outputs voltage, another outputs percentage. 
+Both levels are normalized to 5 percent, which corresponds roughly to 2.37 Volts. Below that the device starts malfunctioning.
+
+                if(batteryLevel < 5 && mode.isCalibrateFinish()) {
+                    AlarmItem battery = AlarmItem.BATTERY;
+                    eventNotificationObservable.setAlarmItem(battery);
+                }
