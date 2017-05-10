@@ -97,28 +97,28 @@ Here is the logic for calculating the rollover angle
     }
 
 Here is the logic for calculation if baby is on the back, I've added comments and the code snippet below
-// if acceleration is in a steady state (more than 0.8g and less than 1.2g)
-if (sensorValArray.getAcceleration() > 0.8
-        && sensorValArray.getAcceleration() < 1.2) {
-    if (sensorValArray.getMbAngle() < 135.0) { // not on a back
-        if (sensorValArray.getMbAngle() < 45.0) { // if angle less than 45 then on the stomach, otherwise on a side
-            babyBack = true;
-            sensorValArray.incrementOnBack();
-        }
-    } else {
-        babyBack = false;
-        // if the angle more than 135 then sound alert
-        sensorValArray.incrementOnStomach();
-        if (sharedPreferencesHelper.getOrientation()
-                && mode.isCalibrateFinish()) {
-            AlarmItem orientation = AlarmItem.ORIENTATION;
-            orientation.setTimestamp(Calendar.getInstance()
-                    .getTimeInMillis());
-            uiObservable.setAlarmItem(orientation);
-            eventNotificationObservable.setAlarmItem(orientation);
+    // if acceleration is in a steady state (more than 0.8g and less than 1.2g)
+    if (sensorValArray.getAcceleration() > 0.8
+            && sensorValArray.getAcceleration() < 1.2) {
+        if (sensorValArray.getMbAngle() < 135.0) { // not on a back
+            if (sensorValArray.getMbAngle() < 45.0) { // if angle less than 45 then on the stomach, otherwise on a side
+                babyBack = true;
+                sensorValArray.incrementOnBack();
+            }
+        } else {
+            babyBack = false;
+            // if the angle more than 135 then sound alert
+            sensorValArray.incrementOnStomach();
+            if (sharedPreferencesHelper.getOrientation()
+                    && mode.isCalibrateFinish()) {
+                AlarmItem orientation = AlarmItem.ORIENTATION;
+                orientation.setTimestamp(Calendar.getInstance()
+                        .getTimeInMillis());
+                uiObservable.setAlarmItem(orientation);
+                eventNotificationObservable.setAlarmItem(orientation);
+            }
         }
     }
-}
 
 ------------
 Average activity
