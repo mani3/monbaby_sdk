@@ -1,7 +1,7 @@
 Algorithms always process data from a moving window of about 15 seconds, depending on an algorithm. The data from the accelerometer is stored into sensorArray vector and only most recent data points are processed.
 
 # Calibration Process
----------------
+
 During calibration, BLE on mobile phones establish connection to the button and activates accelerometer. Once BLE connection is established, there is a 15 second "Calibration" period. This is done on a scheduled timer:
 
     executorService.schedule(new EventDelayCommand(), EVENT_DELAY, TimeUnit.MILLISECONDS);
@@ -43,7 +43,7 @@ During those 15 seconds, two things happen:
 It only populates initial settings if they are not set (xinit==-999.) and if there is not much variance. If there is too much variance and values within the interval exceed max and min, then the default "vertical" setting is stored, xinit = 0, yinit = 0, zinit = 1.0;
 
 # Rollover Logic
----------------
+
 Here is the logic for calculating the rollover angle
 
     public double calcRolloverAngle(double timeWindow1) {
@@ -165,7 +165,7 @@ Here is the logic for calculation if baby is on the back, I've added comments an
     }
 
 # Average activity
-------------
+
 Average activity is a detrended squared sum of accelerometer measurements. Detrending is done by subtracting averaged over analysis timeperiod (20 seconds) value of squared sum of accelerometer measurements.
 
         ANALYSIS_TIMEPERIOD = 20.0f;
@@ -186,18 +186,17 @@ Average activity is a detrended squared sum of accelerometer measurements. Detre
             activityLevel += d1;
         }
 
-------------
-Sleeping time
-------------
+# Sleep time
+
 TBD
 
 # Awake time
-------------
+
 TBD
 
 
 # Fall detection
-------------
+
 Fall is detected by finding within 5 second time period, falling time-period followed by a hit
 
 		for (ii = 1; ii < windowsize; ii++) {
@@ -218,11 +217,11 @@ Fall is detected by finding within 5 second time period, falling time-period fol
         }
 
 # Prone time
-------------
+TBA
 
 
 # Battery alert
-------------
+
 We have 2 services for battery level, one service outputs voltage, another outputs percentage. 
 Both levels are normalized to 5 percent, which corresponds roughly to 2.37 Volts. Below that the device starts malfunctioning.
 
