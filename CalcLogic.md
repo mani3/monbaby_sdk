@@ -1,15 +1,14 @@
 Algorithms always process data from a moving window of about 15 seconds, depending on an algorithm. The data from the accelerometer is stored into sensorArray vector and only most recent data points are processed.
 
----------------
-Calibration Logic
+#Calibration Process
 ---------------
 During calibration, BLE on mobile phones establish connection to the button and activates accelerometer. Once BLE connection is established, there is a 15 second "Calibration" period. This is done on a scheduled timer:
 
     executorService.schedule(new EventDelayCommand(), EVENT_DELAY, TimeUnit.MILLISECONDS);
     
 During those 15 seconds, two things happen:
-*the sensorArray vector is populated with at least 15 seconds of the data
-*one of the algorithms (Rollover) stores initial position. 
+* the sensorArray vector is populated with at least 15 seconds of the data
+* one of the algorithms (Rollover) stores initial position. 
 
             if (xinit == -999.0 && yinit == -999.0 && zinit == -999.0) {
                 // make sure we accumulated enough points during 5 seconds
