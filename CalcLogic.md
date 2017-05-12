@@ -1,3 +1,48 @@
+Algorithms always process data from a moving window of about 15 seconds, depending on an algorithm. The data from the accelerometer is stored into sensorArray vector and only most recent data points are processed.
+
+---------------
+Calibration Logic
+---------------
+During calibration, BLE on mobile phones establish connection to the button and activates accelerometer. Once BLE connection is established, there is a 15 second "Calibration" period. This is done on a scheduled timer:
+
+    executorService.schedule(new EventDelayCommand(), EVENT_DELAY, TimeUnit.MILLISECONDS);
+    
+During those 15 seconds, two things happen:
+*the sensorArray vector is populated with at least 15 seconds of the data
+*one of the algorithms (Rollover) stores initial position. 
+
+            if (xinit == -999.0 && yinit == -999.0 && zinit == -999.0) {
+                // make sure we accumulated enough points during 5 seconds
+                if (mcnt > MONBABY_EVENT_FREQ * SENSOR_RT_TIMEPERIOD * 2) {
+                    // now make sure the sensor was not moving when we
+                    // recorded initial positions
+                    if (xval != 0.0
+                            && yval != 0.0
+                            && zval != 0.0
+                            // if maximum and minimum values are not too far
+                            // from mean value, it's a proxy for standard deviation
+                            // that means the sensor was steady
+                            && xval > maxval[0] - 0.1
+                            && xval < minval[0] + 0.1
+                            && yval > maxval[1] - 0.1
+                            && yval < minval[1] + 0.1
+                            && zval > maxval[2] - 0.1
+                            && zval < minval[2] + 0.1) {
+                        xinit = xval;
+                        yinit = yval;
+                        zinit = zval;
+                    } else {
+                        // else, sensor was moving too much and we revert to
+                        // default settings
+                        xinit = 0.0;
+                        yinit = 0.0;
+                        zinit = 1.0;
+                    }
+                }
+            }
+
+It only populates initial settings if they are not set (xinit==-999.) and if there is not much variance. If there is too much variance and values within the interval exceed max and min, then the default "vertical" setting is stored, xinit = 0, yinit = 0, zinit = 1.0;
+
 ---------------
 Rollover Logic
 ---------------
