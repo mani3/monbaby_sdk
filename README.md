@@ -18,3 +18,11 @@ http://cache.freescale.com/files/sensors/doc/app_note/AN4076.pdf
 
 Usuful forums:
 e2e.ti.com
+
+# UUID listings for services and descriptors
+ACCELEROMETER_SERVICE = 0xAA10;
+ACCELEROMETER_CONFIG = 0xAA12;
+ACCELEROMETER_DATA14 = 0xAA16;
+UUID_PATTERN_STRING = "0000%04x-0000-1000-8000-00805f9b34fb";
+DESCRIPTOR = 0x2902;
+VALUE_ENABLE_ACCELEROMETER = {0x03};
