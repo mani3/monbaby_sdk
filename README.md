@@ -19,6 +19,21 @@ http://cache.freescale.com/files/sensors/doc/app_note/AN4076.pdf
 Usuful forums:
 e2e.ti.com
 
+# Accelerometer Profile Details
+
+MonBaby firmware/hardware is based on Bluetooth 4.0 and Texas Instruments SOC CC2540 with TI's BLE stack 1.4.2.2.
+
+* The advertising interval is set to 300mS and advertising mode is set to "general discoverable", therefore advertises infinitely.
+* The min and max connection intervals are 10mS and 75mS.
+* Slave latency is 15.
+* The connection timeout is 6 seconds.
+* Address type is public.
+* When initially establishing a connection, the Accelerometer notifications begins, this can be seen on the monBaby unit by the blue led blinking 10 times.
+* Flag length: 0x02
+* Flag type: 0x01
+* Flags: 0x06 - General discoverable, BtEdr Not Supported
+
+
 # UUID listings for services and descriptors
 
 For a full list please visit: https://docs.google.com/spreadsheets/d/1s70X4K4zBTn0KOcfKAh_yYGUy5wOYbzKIK63zFN7Evo/edit?usp=sharing
